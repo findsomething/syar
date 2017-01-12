@@ -1,0 +1,12 @@
+/bin/*
+!/bin/console
+!/bin/server
+/config/parameters.php
+/config/server.php
+/config/plumber.php
+/var/cache/*
+/var/logs/*.log
+/var/locks/*.pid
+/phinx.php
+/vendor/
+/phpunit.xml

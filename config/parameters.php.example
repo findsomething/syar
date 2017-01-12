@@ -1,0 +1,11 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lihan
+ * Date: 17/1/12
+ * Time: 17:26
+ */
+ return [
+    'log_path' => dirname(__DIR__)."/var/logs/",
+    'log_level' => 100, // debug
+ ];

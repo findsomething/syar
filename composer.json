@@ -1,0 +1,22 @@
+{
+  "name": "fsth/syar",
+  "description": "yar base on worker",
+  "autoload": {
+    "psr-4": {
+      "FSth\\SYar\\": "src",
+      "FSth\\SYar\\Test\\": "tests"
+    }
+  },
+  "authors": [
+    {
+      "name": "qiqisan",
+      "email": "qiqisan1@126.com"
+    }
+  ],
+  "require": {
+    "fsth/framework": "v0.1.1"
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}

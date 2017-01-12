@@ -1,0 +1,26 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: lihan
+ * Date: 17/1/1
+ * Time: 14:48
+ */
+return [
+    'bootstrap' => dirname(__DIR__). "/bootstrap/bootstrap-test.php",
+    'host' => '0.0.0.0',
+    'port' => '9501',
+    'daemonize' => false,
+    'pid_file' => dirname(__DIR__)."/var/locks/server.pid",
+    'server' => "FSth\\Framework\\Server\\HttpServer",
+    'protocol' => "FSth\\Framework\\Server\\Protocol",
+    'setting' => [
+        'max_connection' => 101,       //worker process num
+        'worker_num' => 8,       //worker process num
+        'max_request' => 10000,
+        'backlog' => 128,        //listen backlog
+        'open_tcp_keepalive' => 1,
+        'heartbeat_check_interval' => 5,
+        'heartbeat_idle_time' => 10,
+        'http_parse_post' => false,
+    ]
+];
