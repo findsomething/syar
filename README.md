@@ -14,7 +14,7 @@ bin/server start|stop config/server.php
 
 ```
 测试
-$client = new \Yar_client($this->url."?service=TestService");
+$client = new \Yar_client("http://127.0.0.1:9503/?service=TestService");
 $params = array('hello' => 'world');
 $result = $client->giveBack($params);
 var_dump($result);
