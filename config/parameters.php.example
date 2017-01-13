@@ -8,4 +8,5 @@
  return [
     'log_path' => dirname(__DIR__)."/var/logs/",
     'log_level' => 100, // debug
+    'registers' => __DIR__."/registers.php",
  ];

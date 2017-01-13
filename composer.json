@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "fsth/framework": ">=0.1.1"
+    "fsth/framework": ">=0.1.2"
   },
   "config": {
     "bin-dir": "bin"
