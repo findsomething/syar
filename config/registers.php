@@ -7,4 +7,5 @@
  */
 return [
     'TestService',
+    'NotFoundService'
 ];

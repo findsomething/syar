@@ -10,7 +10,6 @@ namespace FSth\SYar\Server;
 use FSth\Framework\Server\Protocol as BaseProtocol;
 use FSth\SYar\Exception\SYarException;
 use FSth\SYar\Yar\Packer;
-use FSth\SYar\Yar\Yar;
 
 class Protocol extends BaseProtocol
 {
