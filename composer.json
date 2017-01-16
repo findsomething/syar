@@ -16,7 +16,5 @@
   "require": {
     "fsth/framework": ">=0.1.2"
   },
-  "config": {
-    "bin-dir": "bin"
-  }
+  "bin": ["bin/rpcServer"]
 }
