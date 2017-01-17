@@ -1,6 +1,6 @@
 /bin/*
 !/bin/console
-!/bin/rpcServer
+!/bin/server
 /config/parameters.php
 /config/server.php
 /config/plumber.php
