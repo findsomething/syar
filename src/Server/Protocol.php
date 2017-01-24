@@ -22,6 +22,16 @@ class Protocol extends BaseProtocol
         $this->packer = new Packer();
     }
 
+    public function onTask(\swoole_http_server $server, $taskId, $fromId, $data)
+    {
+
+    }
+
+    public function onFinish(\swoole_http_server $server, $taskId, $data)
+    {
+
+    }
+
     public function onRequest(\swoole_http_request $req, \swoole_http_response $res)
     {
         try {

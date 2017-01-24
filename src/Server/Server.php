@@ -11,20 +11,10 @@ use FSth\Framework\Server\HttpServer;
 
 class Server extends HttpServer
 {
-    protected $initBinds = array(
-        'onServerStart' => 'ManagerStart',
-        'onServerStop' => 'ManagerStop',
+    protected $binds = array(
+        'onWorkerStart' => 'WorkerStart',
+        'onRequest' => 'request',
         'onTask' => 'task',
         'onFinish' => 'finish'
     );
-
-    public function onTask(\swoole_http_server $server, $taskId, $fromId, $data)
-    {
-
-    }
-
-    public function onFinish(\swoole_http_server $server, $taskId, $data)
-    {
-
-    }
 }
