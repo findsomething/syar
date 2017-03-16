@@ -7,14 +7,15 @@
  */
 namespace FSth\SYar\Server;
 
-use FSth\Framework\Server\HttpServer;
+use FSth\Framework\Server\MultiServer;
 
-class Server extends HttpServer
+class Server extends MultiServer
 {
-    protected $binds = array(
+    protected $binds = [
         'onWorkerStart' => 'WorkerStart',
         'onRequest' => 'request',
         'onTask' => 'task',
-        'onFinish' => 'finish'
-    );
+        'onFinish' => 'finish',
+        'onReceive' => 'receive'
+    ];
 }
