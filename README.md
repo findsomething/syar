@@ -21,3 +21,6 @@ var_dump($result);
 ```
 
 ### changelog
+* 2017-03-17 v0.1.5:
+	add rpc with tcp protocol
+
