@@ -56,7 +56,7 @@ class Client
     {
         // TODO: Implement __call() method.
         try {
-            if ($this->client->reuse === false && $this->client->isConnected() === false) {
+            if (empty($this->client) || $this->client->isConnected() === false) {
                 $this->tcpConnect();
             }
             $this->client->send($this->packer->encode(Format::client($this->service, $name, $arguments)));
@@ -65,6 +65,9 @@ class Client
             $result = $this->packer->decode($receive);
             return $this->parser->parse($result['data']);
         } catch (\Exception $e) {
+            if ($e->getCode() == 2 && strpos($e->getMessage(), 'Broken pipe') !== false) {
+                $this->client->close();
+            }
             throw new SYarException($e->getMessage(), $e->getCode());
         }
     }

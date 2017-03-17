@@ -15,6 +15,15 @@ class SYarClientTest extends PHPUnit_Framework_TestCase
 
     public function testClient()
     {
-        $result = $this->client->giveBack('hehe');
+        for ($i = 0; $i < 4; $i++) {
+            try {
+                sleep(1);
+                $result = $this->client->giveBack('hehe');
+                var_dump($result);
+            } catch (\Exception $e) {
+                var_dump($e->getMessage());
+            }
+        }
+
     }
 }
