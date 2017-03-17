@@ -524,12 +524,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/findsomething/framework.git",
-                "reference": "9fb3ff4a1ac3f04815ec829b5ec96dccab9aef67"
+                "reference": "5f5535e815aebddb6f867946de149efd0806bbeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/findsomething/framework/9fb3ff4a1ac3f04815ec829b5ec96dccab9aef67.zip",
-                "reference": "9fb3ff4a1ac3f04815ec829b5ec96dccab9aef67",
+                "url": "https://files.phpcomposer.com/files/findsomething/framework/5f5535e815aebddb6f867946de149efd0806bbeb.zip",
+                "reference": "5f5535e815aebddb6f867946de149efd0806bbeb",
                 "shasum": ""
             },
             "require": {
@@ -562,7 +562,7 @@
                 }
             ],
             "description": "a framework base swoole and phalcon",
-            "time": "2017-03-16 15:57:09"
+            "time": "2017-03-17 01:27:03"
         },
         {
             "name": "fsth/redis-client",

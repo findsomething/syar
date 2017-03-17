@@ -2,14 +2,13 @@
 
 namespace FSth\SYar\Client;
 
-use FSth\Framework\Client\Client as BaseClient;
 use FSth\Framework\Server\Pack\Handler;
 use FSth\Framework\Server\Pack\Packer;
 use FSth\SYar\Exception\SYarException;
 use FSth\SYar\Tool\Format;
 use FSth\SYar\Tool\Parser;
 
-class Client extends BaseClient
+class Client
 {
     const RECEIVE_TIMEOUT = 3;
 
@@ -49,6 +48,29 @@ class Client extends BaseClient
 
         $this->host = $host;
         $this->port = $port;
+
+        $this->tcpConnect();
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
+        try {
+            if ($this->client->reuse === false && $this->client->isConnected() === false) {
+                $this->tcpConnect();
+            }
+            $this->client->send($this->packer->encode(Format::client($this->service, $name, $arguments)));
+
+            $receive = $this->client->recv();
+            $result = $this->packer->decode($receive);
+            return $this->parser->parse($result['data']);
+        } catch (\Exception $e) {
+            throw new SYarException($e->getMessage(), $e->getCode());
+        }
+    }
+
+    private function tcpConnect()
+    {
         $connected = $this->client->connect($this->host, $this->port, self::RECEIVE_TIMEOUT);
         if (!$connected) {
             $this->code = $this->client->errCode;
@@ -60,15 +82,5 @@ class Client extends BaseClient
             }
             throw new SYarException($this->error, $this->code);
         }
-    }
-
-    public function __call($name, $arguments)
-    {
-        // TODO: Implement __call() method.
-        $this->client->send($this->packer->encode(Format::client($this->service, $name, $arguments)));
-
-        $receive = $this->client->recv();
-        $result = $this->packer->decode($receive);
-        return $this->parser->parse($result['data']);
     }
 }
