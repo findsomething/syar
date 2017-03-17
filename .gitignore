@@ -1,13 +1,9 @@
 /bin/*
-!/bin/console
 !/bin/server
 /config/parameters.php
 /config/server.php
-/config/plumber.php
-/var/cache/*
+/config/multiServer.php
 /var/logs/*.log
-/var/locks/*.pid
-/phinx.php
 /vendor/
 /phpunit.xml
 /.idea

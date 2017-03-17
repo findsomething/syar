@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lihan
- * Date: 17/1/1
- * Time: 14:48
- */
+
 return [
     'bootstrap' => dirname(__DIR__). "/bootstrap/bootstrap-server.php",
     'host' => '0.0.0.0',
     'port' => '9503',
+    'tcpPort' => '9504',
     'daemonize' => false,
     'pid_file' => dirname(__DIR__)."/var/locks/server.pid",
     'server' => "FSth\\SYar\\Server\\Server",
@@ -25,5 +21,11 @@ return [
         'buffer_output_size' => 134217728, // 数据发送缓存区
         'pipe_buffer_size' => 134217728, // 管道通信的内存缓存区长度
         'socket_buffer_size' => 134217728, // 包括socket底层操作系统缓存区、应用层接收数据内存缓存区、应用层发送数据内存缓冲区
+    ],
+    'tcpSetting' => [
+        'open_length_check' => 1,
+        'package_length_type' => 'N',
+        'package_length_offset' => 0,
+        'package_body_offset' => 4,
     ],
 ];

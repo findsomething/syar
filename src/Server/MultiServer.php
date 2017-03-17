@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lihan
- * Date: 17/1/12
- * Time: 23:19
- */
+
 namespace FSth\SYar\Server;
 
-use FSth\Framework\Server\HttpServer;
+use FSth\Framework\Server\MultiServer as BaseMultiServer;
 
-class Server extends HttpServer
+class MultiServer extends BaseMultiServer
 {
     protected $binds = [
         'onWorkerStart' => 'WorkerStart',
