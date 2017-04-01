@@ -2,7 +2,7 @@
 !/bin/server
 /config/parameters.php
 /config/server.php
-/config/multiServer.php
+/config/multi-server.php
 /var/logs/*.log
 /vendor/
 /phpunit.xml
