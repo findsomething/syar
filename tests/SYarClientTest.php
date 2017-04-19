@@ -3,7 +3,7 @@
 class SYarClientTest extends PHPUnit_Framework_TestCase
 {
     private $host = '127.0.0.1';
-    private $port = 9504;
+    private $port = 9508;
 
     private $client;
 

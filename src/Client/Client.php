@@ -10,7 +10,10 @@ use FSth\SYar\Tool\Parser;
 
 class Client
 {
-    const RECEIVE_TIMEOUT = 3;
+    const RECEIVE_TIMEOUT = 10;
+
+    const CONNECT_ERROR = 2;
+    const RECEIVE_ERROR = 3;
 
     protected $host;
     protected $port;
@@ -24,6 +27,7 @@ class Client
 
     protected $packer;
     protected $parser;
+    protected $timeout;
 
     protected $setting = [
         'open_length_check' => 1,
@@ -49,6 +53,8 @@ class Client
         $this->host = $host;
         $this->port = $port;
 
+        $this->timeout = self::RECEIVE_TIMEOUT;
+
         $this->tcpConnect();
     }
 
@@ -59,31 +65,62 @@ class Client
             if (empty($this->client) || $this->client->isConnected() === false) {
                 $this->tcpConnect();
             }
-            $this->client->send($this->packer->encode(Format::client($this->service, $name, $arguments)));
+            $ret = $this->client->send($this->packer->encode(Format::client($this->service, $name, $arguments)));
+            $this->checkTcpSendResult($ret);
 
-            $receive = $this->client->recv();
+            $receive = $this->waitTcpResult();
             $result = $this->packer->decode($receive);
             return $this->parser->parse($result['data']);
         } catch (\Exception $e) {
-            if ($e->getCode() == 2 && strpos($e->getMessage(), 'Broken pipe') !== false) {
-                $this->client->close();
+            if (($e->getCode() == 2 || $e->getCode() == 3) && strpos($e->getMessage(), 'Broken pipe') !== false) {
+                $this->tcpClose();
             }
             throw new SYarException($e->getMessage(), $e->getCode());
         }
     }
 
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    private function waitTcpResult()
+    {
+        while (1) {
+            $result = $this->client->recv();
+            if ($result !== false && $result != "") {
+                return $result;
+            }
+            throw new \Exception("receive time out", self::RECEIVE_ERROR);
+        }
+    }
+
+    private function checkTcpSendResult($ret)
+    {
+        if (!empty($ret)) {
+            return;
+        }
+        $errorCode = $this->client->errCode;
+
+        $msg = ($errorCode == 0) ? "Connect fail. Check host dns." : \socket_strerror($errorCode);
+
+        throw new SYarException($msg, self::CONNECT_ERROR);
+    }
+
+    private function tcpClose()
+    {
+        try {
+            $this->client->close(true);
+        } catch (\Exception $e) {
+
+        } finally {
+            $this->client = null;
+        }
+    }
+
     private function tcpConnect()
     {
-        $connected = $this->client->connect($this->host, $this->port, self::RECEIVE_TIMEOUT);
-        if (!$connected) {
-            $this->code = $this->client->errCode;
-            if ($this->code == 0) {
-                $this->error = "Connect fail.Please check the host dns.";
-                $this->code = -1;
-            } else {
-                $this->error = \socket_strerror($this->code);
-            }
-            throw new SYarException($this->error, $this->code);
-        }
+        $connected = $this->client->connect($this->host, $this->port, $this->timeout);
+        $this->checkTcpSendResult($connected);
     }
 }
