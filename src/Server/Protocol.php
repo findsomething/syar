@@ -42,11 +42,13 @@ class Protocol extends BaseProtocol
     public function onRequest(\swoole_http_request $req, \swoole_http_response $res)
     {
         try {
+            $this->beforeRequest($req, $res);
             $parse = $this->parseReq($req);
             $service = $this->kernel->service($parse['service']);
             $result = call_user_func_array([$service, $parse['method']], $parse['params']);
             $this->yar->setReturnValue($result);
             $res->header('Content-Type', 'application/octet-stream');
+            $this->afterRequest($req, $res);
             $res->end($this->packer->pack($this->yar));
         } catch (\Exception $e) {
             if (!empty($this->yar)) {
@@ -62,6 +64,7 @@ class Protocol extends BaseProtocol
 
     public function onReceive(\swoole_server $server, $fd, $fromId, $data)
     {
+        $this->beforeReceive($server, $fd, $fromId, $data);
         $decode = $this->tcpPacker->decode($data);
         if ($decode['msg'] != 'OK') {
             $result = Format::serverException($decode['msg'], $decode['code']);
@@ -76,7 +79,28 @@ class Protocol extends BaseProtocol
             }
         }
         $encode = $this->tcpPacker->encode($result);
+        $this->afterReceive($server, $fd, $fromId, $data);
         $server->send($fd, $encode);
+    }
+
+    protected function beforeRequest(\swoole_http_request $req, \swoole_http_response $res)
+    {
+
+    }
+
+    protected function afterRequest(\swoole_http_request $req, \swoole_http_response $res)
+    {
+
+    }
+
+    protected function beforeReceive(\swoole_server $server, $fd, $fromId, $data)
+    {
+
+    }
+
+    protected function afterReceive(\swoole_server $server, $fd, $fromId, $data)
+    {
+
     }
 
     private function parseReq(\swoole_http_request $req)
