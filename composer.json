@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "fsth/framework": "^0.1.5"
+    "fsth/framework": "^0.2.0"
   },
   "bin": ["bin/rpcServer"]
 }
