@@ -7,10 +7,10 @@
 ### 使用方法
 
 * 启动服务端:
-bin/server start|stop config/server.php
+bin/server run|start|stop|restart config/server.php
 
 * 启动带tcp与http的服务端 :
-bin/server start|stop config/multi-server.php
+bin/server run|start|stop|restart config/multi-server.php
 
 
 
