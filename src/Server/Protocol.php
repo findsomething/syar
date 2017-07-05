@@ -7,18 +7,25 @@
  */
 namespace FSth\SYar\Server;
 
+use FSth\Framework\Context\Context;
+use FSth\Framework\Extension\ZipKin\RequestKin;
 use FSth\Framework\Server\Pack\Handler as TcpHandler;
 use FSth\Framework\Server\Protocol as BaseProtocol;
 use FSth\SYar\Exception\SYarException;
 use FSth\SYar\Tool\Format;
 use FSth\SYar\Yar\Packer;
 use FSth\Framework\Server\Pack\Packer as TcpPacker;
+use whitemerry\phpkin\Tracer;
 
 class Protocol extends BaseProtocol
 {
-    private $packer;
-    private $yar;
-    private $tcpPacker;
+    protected $packer;
+    protected $yar;
+    protected $tcpPacker;
+
+    protected $parse;
+
+    protected $receiveParse;
 
     public function __construct($kernel)
     {
@@ -42,13 +49,12 @@ class Protocol extends BaseProtocol
     public function onRequest(\swoole_http_request $req, \swoole_http_response $res)
     {
         try {
+            $this->parse = $parse = $this->parseReq($req);
             $this->beforeRequest($req, $res);
-            $parse = $this->parseReq($req);
             $service = $this->kernel->service($parse['service']);
-            $result = call_user_func_array([$service, $parse['method']], $parse['params']);
+            $result = call_user_func_array([$service, $parse['method']], $this->parse['params']);
             $this->yar->setReturnValue($result);
             $res->header('Content-Type', 'application/octet-stream');
-            $this->afterRequest($req, $res);
             $res->end($this->packer->pack($this->yar));
         } catch (\Exception $e) {
             if (!empty($this->yar)) {
@@ -59,13 +65,15 @@ class Protocol extends BaseProtocol
                 $res->status(500);
                 $res->end($e->getMessage());
             }
+        } finally {
+            $this->afterRequest($req, $res);
         }
     }
 
     public function onReceive(\swoole_server $server, $fd, $fromId, $data)
     {
+        $this->receiveParse = $decode = $this->tcpPacker->decode($data);
         $this->beforeReceive($server, $fd, $fromId, $data);
-        $decode = $this->tcpPacker->decode($data);
         if ($decode['msg'] != 'OK') {
             $result = Format::serverException($decode['msg'], $decode['code']);
         } else {
@@ -85,22 +93,66 @@ class Protocol extends BaseProtocol
 
     protected function beforeRequest(\swoole_http_request $req, \swoole_http_response $res)
     {
+        $this->context = new Context();
+        $traceConfig = $this->kernel->config('trace');
+        if (empty($traceConfig['execute']) || !$traceConfig['execute']) {
+            return false;
+        }
+        $serverConfig = $this->kernel->config('server');
+        $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
+        $requestKin = new RequestKin($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting']);
+        $server = !empty($this->parse['params']['traceHeader']) ? $this->parse['params']['traceHeader'] : [];
+        unset($this->parse['params']['traceHeader']);
+        $requestKin->setRequestServer($server);
+        $tracer = $requestKin->getTracer();
 
-    }
+        $this->context->traceId = $requestKin->getTraceId();
+        $this->context->traceSpanId = $requestKin->getTraceSpanId();
+        $this->context->sampled = $requestKin->getSampled();
+        $this->context->tracer = $tracer;
 
-    protected function afterRequest(\swoole_http_request $req, \swoole_http_response $res)
-    {
-
+        $GLOBALS['context'] = $this->context;
     }
 
     protected function beforeReceive(\swoole_server $server, $fd, $fromId, $data)
     {
+        $this->context = new Context();
+        $traceConfig = $this->kernel->config('trace');
+        if (empty($traceConfig['execute']) || !$traceConfig['execute']) {
+            return false;
+        }
+        $serverConfig = $this->kernel->config('server');
+        $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
+        $requestKin = new RequestKin($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting']);
+        $server = [];
+        if (!empty($this->receiveParse['data']) && !empty($this->receiveParse['data']['p']) &&
+            !empty($this->receiveParse['data']['p']['traceHeader'])
+        ) {
+            $server = $this->receiveParse['data']['p']['traceHeader'];
+            unset($this->receiveParse['data']['p']['traceHeader']);
+        }
+        $requestKin->setRequestServer($server);
+        $tracer = $requestKin->getTracer();
 
+        $this->context->traceId = $requestKin->getTraceId();
+        $this->context->traceSpanId = $requestKin->getTraceSpanId();
+        $this->context->sampled = $requestKin->getSampled();
+        $this->context->tracer = $tracer;
+
+        $GLOBALS['context'] = $this->context;
     }
 
     protected function afterReceive(\swoole_server $server, $fd, $fromId, $data)
     {
-
+        $traceConfig = $this->kernel->config('trace');
+        if (empty($traceConfig['execute'])) {
+            return false;
+        }
+        $tracer = $GLOBALS['context']->tracer;
+        if ($tracer instanceof Tracer) {
+            $tracer->trace();
+        }
+        unset($GLOBALS['context']);
     }
 
     private function parseReq(\swoole_http_request $req)

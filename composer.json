@@ -15,7 +15,9 @@
     }
   ],
   "require": {
-    "fsth/framework": "^0.2.0"
+    "fsth/framework": "dev-master"
   },
-  "bin": ["bin/rpcServer"]
+  "bin": [
+    "bin/server"
+  ]
 }

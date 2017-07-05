@@ -9,4 +9,11 @@
     'log_path' => dirname(__DIR__)."/var/logs/",
     'log_level' => 100, // debug
     'registers' => __DIR__."/registers.php",
+    'trace' => [
+        'setting' => [
+            'logger_type' => 'http',
+            'host' => 'http://127.0.0.1:9411',
+        ],
+        'execute' => true,
+    ],
  ];
