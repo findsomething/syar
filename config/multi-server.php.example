@@ -2,6 +2,7 @@
 
 return [
     'bootstrap' => dirname(__DIR__). "/bootstrap/bootstrap-server.php",
+    'name' => 'testRpc',
     'host' => '0.0.0.0',
     'port' => '9503',
     'tcpPort' => '9504',
