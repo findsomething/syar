@@ -524,12 +524,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/findsomething/framework.git",
-                "reference": "b7e204338d2da2204a8d9eaf9e52001579d682a2"
+                "reference": "7d2b21b49bf5e84b9e10321f383a99049d96d1b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/findsomething/framework/b7e204338d2da2204a8d9eaf9e52001579d682a2.zip",
-                "reference": "b7e204338d2da2204a8d9eaf9e52001579d682a2",
+                "url": "https://files.phpcomposer.com/files/findsomething/framework/7d2b21b49bf5e84b9e10321f383a99049d96d1b1.zip",
+                "reference": "7d2b21b49bf5e84b9e10321f383a99049d96d1b1",
                 "shasum": ""
             },
             "require": {
@@ -565,7 +565,7 @@
                 }
             ],
             "description": "a framework base swoole and phalcon",
-            "time": "2017-07-05 16:11:44"
+            "time": "2017-07-06 04:04:48"
         },
         {
             "name": "fsth/redis-client",
@@ -1119,7 +1119,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.3.3",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -1227,7 +1227,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.3",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

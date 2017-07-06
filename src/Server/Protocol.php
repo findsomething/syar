@@ -95,15 +95,17 @@ class Protocol extends BaseProtocol
     {
         $this->context = new Context();
         $traceConfig = $this->kernel->config('trace');
+        $traceHeader = $this->getTraceHeaderByRequest();
+
         if (empty($traceConfig['execute']) || !$traceConfig['execute']) {
             return false;
         }
         $serverConfig = $this->kernel->config('server');
         $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
         $requestKin = new RequestKin($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting']);
-        $server = !empty($this->parse['params']['traceHeader']) ? $this->parse['params']['traceHeader'] : [];
-        unset($this->parse['params']['traceHeader']);
-        $requestKin->setRequestServer($server);
+
+        $traceHeader['request_uri'] = $this->parse['service'] . "_" . $this->parse['method'];
+        $requestKin->setRequestServer($traceHeader);
         $tracer = $requestKin->getTracer();
 
         $this->context->traceId = $requestKin->getTraceId();
@@ -112,6 +114,19 @@ class Protocol extends BaseProtocol
         $this->context->tracer = $tracer;
 
         $GLOBALS['context'] = $this->context;
+    }
+
+    protected function getTraceHeaderByRequest()
+    {
+        $traceHeader = [];
+        $num = count($this->parse['params']);
+        if ($num >= 1) {
+            if (!empty($this->parse['params'][$num - 1]['traceHeader'])) {
+                $traceHeader = $this->parse['params'][$num - 1]['traceHeader'];
+                unset($this->parse['params'][$num - 1]);
+            }
+        }
+        return $traceHeader;
     }
 
     protected function beforeReceive(\swoole_server $server, $fd, $fromId, $data)
