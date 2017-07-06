@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "fsth/framework": "dev-master"
+    "fsth/framework": "^0.3.0"
   },
   "bin": [
     "bin/server"

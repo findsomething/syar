@@ -11,6 +11,7 @@ use FSth\Framework\Context\Context;
 use FSth\Framework\Extension\ZipKin\RequestKin;
 use FSth\Framework\Server\Pack\Handler as TcpHandler;
 use FSth\Framework\Server\Protocol as BaseProtocol;
+use FSth\Framework\Tool\StandardTool;
 use FSth\SYar\Exception\SYarException;
 use FSth\SYar\Tool\Format;
 use FSth\SYar\Yar\Packer;
@@ -102,18 +103,40 @@ class Protocol extends BaseProtocol
         }
         $serverConfig = $this->kernel->config('server');
         $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
-        $requestKin = new RequestKin($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting']);
+        $traceHeader['request_uri'] = StandardTool::toSpanName($this->parse['service'], $this->parse['method']);
 
-        $traceHeader['request_uri'] = $this->parse['service'] . "_" . $this->parse['method'];
-        $requestKin->setRequestServer($traceHeader);
-        $tracer = $requestKin->getTracer();
+        $this->initTrace($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting'],
+            $traceHeader);
+    }
 
-        $this->context->traceId = $requestKin->getTraceId();
-        $this->context->traceSpanId = $requestKin->getTraceSpanId();
-        $this->context->sampled = $requestKin->getSampled();
-        $this->context->tracer = $tracer;
+    protected function beforeReceive(\swoole_server $server, $fd, $fromId, $data)
+    {
+        $this->context = new Context();
+        $traceConfig = $this->kernel->config('trace');
+        $data = !empty($this->receiveParse['data']) ? $this->receiveParse['data'] : [];
+        if (empty($traceConfig['execute']) || !$traceConfig['execute'] || empty($data)) {
+            return false;
+        }
+        $traceHeader = $this->getTraceHeaderByReceive();
+        $serverConfig = $this->kernel->config('server');
+        $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
+        $traceHeader['request_uri'] = StandardTool::toSpanName($data['s'], $data['m']);
 
-        $GLOBALS['context'] = $this->context;
+        $this->initTrace($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting'],
+            $traceHeader);
+    }
+
+    protected function afterReceive(\swoole_server $server, $fd, $fromId, $data)
+    {
+        $traceConfig = $this->kernel->config('trace');
+        if (empty($traceConfig['execute'])) {
+            return false;
+        }
+        $tracer = $GLOBALS['context']->tracer;
+        if ($tracer instanceof Tracer) {
+            $tracer->trace();
+        }
+        unset($GLOBALS['context']);
     }
 
     protected function getTraceHeaderByRequest()
@@ -129,45 +152,19 @@ class Protocol extends BaseProtocol
         return $traceHeader;
     }
 
-    protected function beforeReceive(\swoole_server $server, $fd, $fromId, $data)
+    protected function getTraceHeaderByReceive()
     {
-        $this->context = new Context();
-        $traceConfig = $this->kernel->config('trace');
-        if (empty($traceConfig['execute']) || !$traceConfig['execute']) {
-            return false;
+        $traceHeader = [];
+        if ($this->receiveParse['msg'] == 'OK') {
+            $num = count($this->receiveParse['data']['p']);
+            if ($num >= 1) {
+                if (!empty($this->receiveParse['data']['p'][$num - 1]['traceHeader'])) {
+                    $traceHeader = $this->receiveParse['data']['p'][$num - 1]['traceHeader'];
+                    unset($this->receiveParse['data']['p'][$num - 1]['traceHeader']);
+                }
+            }
         }
-        $serverConfig = $this->kernel->config('server');
-        $serverName = !empty($serverConfig['name']) ? $serverConfig['name'] : "testYar";
-        $requestKin = new RequestKin($serverName, $serverConfig['host'], $serverConfig['port'], $traceConfig['setting']);
-        $server = [];
-        if (!empty($this->receiveParse['data']) && !empty($this->receiveParse['data']['p']) &&
-            !empty($this->receiveParse['data']['p']['traceHeader'])
-        ) {
-            $server = $this->receiveParse['data']['p']['traceHeader'];
-            unset($this->receiveParse['data']['p']['traceHeader']);
-        }
-        $requestKin->setRequestServer($server);
-        $tracer = $requestKin->getTracer();
-
-        $this->context->traceId = $requestKin->getTraceId();
-        $this->context->traceSpanId = $requestKin->getTraceSpanId();
-        $this->context->sampled = $requestKin->getSampled();
-        $this->context->tracer = $tracer;
-
-        $GLOBALS['context'] = $this->context;
-    }
-
-    protected function afterReceive(\swoole_server $server, $fd, $fromId, $data)
-    {
-        $traceConfig = $this->kernel->config('trace');
-        if (empty($traceConfig['execute'])) {
-            return false;
-        }
-        $tracer = $GLOBALS['context']->tracer;
-        if ($tracer instanceof Tracer) {
-            $tracer->trace();
-        }
-        unset($GLOBALS['context']);
+        return $traceHeader;
     }
 
     private function parseReq(\swoole_http_request $req)

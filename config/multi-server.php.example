@@ -6,7 +6,7 @@ return [
     'port' => '9503',
     'tcpPort' => '9504',
     'pid_file' => dirname(__DIR__)."/var/locks/server-multi.pid",
-    'server' => "FSth\\SYar\\Server\\Server",
+    'server' => "FSth\\SYar\\Server\\MultiServer",
     'protocol' => "FSth\\SYar\\Server\\Protocol",
     'setting' => [
         'max_conn' => 200,

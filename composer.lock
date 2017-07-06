@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3a5c86253a972a346253605659f4f074",
-    "content-hash": "d0d686dbf41646c8125be5c921d03f6c",
+    "hash": "80d7a0e343dc2724cdc4e730bca8de2b",
+    "content-hash": "c24076d8bada1a976951c66a253e8072",
     "packages": [
         {
             "name": "codeages/beanstalk-client",
@@ -520,16 +520,16 @@
         },
         {
             "name": "fsth/framework",
-            "version": "dev-master",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/findsomething/framework.git",
-                "reference": "7d2b21b49bf5e84b9e10321f383a99049d96d1b1"
+                "reference": "b72399fe22b49a1810a462872fc5a82da63b8986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/findsomething/framework/7d2b21b49bf5e84b9e10321f383a99049d96d1b1.zip",
-                "reference": "7d2b21b49bf5e84b9e10321f383a99049d96d1b1",
+                "url": "https://files.phpcomposer.com/files/findsomething/framework/b72399fe22b49a1810a462872fc5a82da63b8986.zip",
+                "reference": "b72399fe22b49a1810a462872fc5a82da63b8986",
                 "shasum": ""
             },
             "require": {
@@ -565,7 +565,7 @@
                 }
             ],
             "description": "a framework base swoole and phalcon",
-            "time": "2017-07-06 04:04:48"
+            "time": "2017-07-06 07:36:22"
         },
         {
             "name": "fsth/redis-client",
@@ -1381,9 +1381,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fsth/framework": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

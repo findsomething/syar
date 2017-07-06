@@ -11,8 +11,10 @@
     'registers' => __DIR__."/registers.php",
     'trace' => [
         'setting' => [
-            'logger_type' => 'http',
+            'logger_type' => 'file', // file/http
             'host' => 'http://127.0.0.1:9411',
+            'file_path' => dirname(__DIR__) . "/var/logs/",
+            'file_name' => 'zipkin.log'
         ],
         'execute' => true,
     ],

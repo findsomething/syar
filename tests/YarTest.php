@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: lihan
@@ -11,18 +12,20 @@ class YarTest extends PHPUnit_Framework_TestCase
 
     public function testSYar()
     {
-        $client = new \Yar_client($this->url."?service=TestService");
+        $client = new \FSth\Framework\Client\YarClient($this->url . "?service=TestService");
+        $client->setServerName("testClient");
         $params = array('hello' => 'world');
+
         $client->giveBack($params);
         var_dump($params);
     }
 
     public function testYar()
     {
-        $this->url = "http://syar.edusoho.net/rpc.php";
-        $client = new \Yar_client($this->url."?service=TestService");
-        $params = array('hello' => 'world');
-        $client->giveBack($params);
-        var_dump($params);
+//        $this->url = "http://syar.edusoho.net/rpc.php";
+//        $client = new \Yar_client($this->url . "?service=TestService");
+//        $params = array('hello' => 'world');
+//        $client->giveBack($params);
+//        var_dump($params);
     }
 }
