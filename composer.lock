@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3a5c86253a972a346253605659f4f074",
-    "content-hash": "d0d686dbf41646c8125be5c921d03f6c",
+    "hash": "18710f12dfc7cf03daf6f8c7035fb316",
+    "content-hash": "4aecfa630487b4d6abbb489ae69b3e30",
     "packages": [
         {
             "name": "codeages/beanstalk-client",
@@ -520,7 +520,7 @@
         },
         {
             "name": "fsth/framework",
-            "version": "dev-master",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/findsomething/framework.git",
@@ -1381,9 +1381,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fsth/framework": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
