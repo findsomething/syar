@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "80d7a0e343dc2724cdc4e730bca8de2b",
-    "content-hash": "c24076d8bada1a976951c66a253e8072",
+    "hash": "3a5c86253a972a346253605659f4f074",
+    "content-hash": "d0d686dbf41646c8125be5c921d03f6c",
     "packages": [
         {
             "name": "codeages/beanstalk-client",
@@ -17,7 +17,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/codeages/beanstalk-client/097acad3cd9489413863f6cad86791216bc972e1.zip",
+                "url": "https://files.phpcomposer.com/files/codeages/beanstalk-client/097acad3cd9489413863f6cad86791216bc972e1.zip",
                 "reference": "097acad3cd9489413863f6cad86791216bc972e1",
                 "shasum": ""
             },
@@ -37,7 +37,7 @@
             ],
             "authors": [
                 {
-                    "name": "Codeages Team",
+                    "name": "codeages team",
                     "email": "team@codeages.com"
                 }
             ],
@@ -126,7 +126,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/doctrine/cache/b6f544a20f4807e81f7044d31e679ccbb1866dc3.zip",
+                "url": "https://files.phpcomposer.com/files/doctrine/cache/b6f544a20f4807e81f7044d31e679ccbb1866dc3.zip",
                 "reference": "b6f544a20f4807e81f7044d31e679ccbb1866dc3",
                 "shasum": ""
             },
@@ -263,7 +263,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/doctrine/common/930297026c8009a567ac051fd545bf6124150347.zip",
+                "url": "https://files.phpcomposer.com/files/doctrine/common/930297026c8009a567ac051fd545bf6124150347.zip",
                 "reference": "930297026c8009a567ac051fd545bf6124150347",
                 "shasum": ""
             },
@@ -407,7 +407,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/doctrine/inflector/90b2128806bfde671b6952ab8bea493942c1fdae.zip",
+                "url": "https://files.phpcomposer.com/files/doctrine/inflector/90b2128806bfde671b6952ab8bea493942c1fdae.zip",
                 "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
@@ -474,7 +474,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/doctrine/lexer/83893c552fd2045dd78aef794c31e694c37c0b8c.zip",
+                "url": "https://files.phpcomposer.com/files/doctrine/lexer/83893c552fd2045dd78aef794c31e694c37c0b8c.zip",
                 "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "shasum": ""
             },
@@ -520,16 +520,16 @@
         },
         {
             "name": "fsth/framework",
-            "version": "v0.3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/findsomething/framework.git",
-                "reference": "b72399fe22b49a1810a462872fc5a82da63b8986"
+                "reference": "ae5dad8ddfc6ed5ac14b96232a556315d0c6947f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/findsomething/framework/b72399fe22b49a1810a462872fc5a82da63b8986.zip",
-                "reference": "b72399fe22b49a1810a462872fc5a82da63b8986",
+                "url": "https://files.phpcomposer.com/files/findsomething/framework/ae5dad8ddfc6ed5ac14b96232a556315d0c6947f.zip",
+                "reference": "ae5dad8ddfc6ed5ac14b96232a556315d0c6947f",
                 "shasum": ""
             },
             "require": {
@@ -565,7 +565,7 @@
                 }
             ],
             "description": "a framework base swoole and phalcon",
-            "time": "2017-07-06 07:36:22"
+            "time": "2017-07-06 08:16:33"
         },
         {
             "name": "fsth/redis-client",
@@ -827,7 +827,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/php-fig/log/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d.zip",
+                "url": "https://files.phpcomposer.com/files/php-fig/log/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d.zip",
                 "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
@@ -874,7 +874,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/robmorgan/phinx/7a19de5bebc59321edd9613bc2a667e7f96224ec.zip",
+                "url": "https://files.phpcomposer.com/files/cakephp/phinx/7a19de5bebc59321edd9613bc2a667e7f96224ec.zip",
                 "reference": "7a19de5bebc59321edd9613bc2a667e7f96224ec",
                 "shasum": ""
             },
@@ -1381,7 +1381,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fsth/framework": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

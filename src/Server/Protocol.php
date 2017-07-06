@@ -128,13 +128,28 @@ class Protocol extends BaseProtocol
 
     protected function afterReceive(\swoole_server $server, $fd, $fromId, $data)
     {
+        $this->handleAfter();
+    }
+
+    protected function handleAfter()
+    {
         $traceConfig = $this->kernel->config('trace');
         if (empty($traceConfig['execute'])) {
             return false;
         }
+        if (empty($GLOBALS['context']) || !($GLOBALS['context'] instanceof Context)) {
+            return false;
+        }
         $tracer = $GLOBALS['context']->tracer;
         if ($tracer instanceof Tracer) {
-            $tracer->trace();
+            try {
+                $tracer->trace();
+            } catch (\Exception $e) {
+                $this->logger->error('trace error', [
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode()
+                ]);
+            }
         }
         unset($GLOBALS['context']);
     }
