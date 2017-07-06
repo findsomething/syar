@@ -29,8 +29,17 @@ $result = $client->giveBack(['hello' => 'world']);
 ```
 
 ### changelog
-* 2017-03-17 v0.1.4:
-	add rpc with tcp protocol
+* 2017-03-17 v0.1.4
+```
+add rpc with tcp protocol
+```
 
-* 2017-05-15 v0.2.0:
-    add cmd 
+* 2017-05-15 v0.2.0
+```
+add cmd Ø
+```
+
+### 2017-07-06 v0.3.0
+```
+add zipKin support
+```
