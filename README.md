@@ -39,7 +39,7 @@ add rpc with tcp protocol
 add cmd Ø
 ```
 
-### 2017-07-06 v0.3.0
+* 2017-07-06 v0.3.0
 ```
 add zipKin support
 ```
