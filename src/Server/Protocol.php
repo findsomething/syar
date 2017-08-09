@@ -50,6 +50,7 @@ class Protocol extends BaseProtocol
     public function onRequest(\swoole_http_request $req, \swoole_http_response $res)
     {
         try {
+            $this->parse = null;
             $this->parse = $parse = $this->parseReq($req);
             $this->beforeRequest($req, $res);
             $service = $this->kernel->service($parse['service']);
@@ -58,6 +59,13 @@ class Protocol extends BaseProtocol
             $res->header('Content-Type', 'application/octet-stream');
             $res->end($this->packer->pack($this->yar));
         } catch (\Exception $e) {
+            if ($e->getCode() != 1001) {
+                $this->logger->error('syar onRequest error', [
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'parse' => $this->parse,
+                ]);
+            }
             if (!empty($this->yar)) {
                 $res->header('Content-Type', 'application/octet-stream');
                 $this->yar->setError($e->getMessage());
@@ -73,6 +81,7 @@ class Protocol extends BaseProtocol
 
     public function onReceive(\swoole_server $server, $fd, $fromId, $data)
     {
+        $this->receiveParse = null;
         $this->receiveParse = $decode = $this->tcpPacker->decode($data);
         $this->beforeReceive($server, $fd, $fromId, $data);
         if ($decode['msg'] != 'OK') {
@@ -85,6 +94,11 @@ class Protocol extends BaseProtocol
                 $result = Format::server($callResult);
             } catch (\Exception $e) {
                 $result = Format::serverException($e->getMessage(), $e->getCode());
+                $this->logger->error('syar onReceive error', [
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'parse' => $this->receiveParse
+                ]);
             }
         }
         $encode = $this->tcpPacker->encode($result);
@@ -163,7 +177,7 @@ class Protocol extends BaseProtocol
     {
         $this->yar = null;
         if ($req->server['request_method'] != 'POST') {
-            throw new SYarException("目前只支持post的请求");
+            throw new SYarException("目前只支持post的请求", 1001);
         }
         $this->yar = $this->packer->unpack($req->rawContent());
         if ($this->yar->getError()) {
