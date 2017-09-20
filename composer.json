@@ -16,8 +16,5 @@
   ],
   "require": {
     "fsth/framework": ">=0.3.6"
-  },
-  "bin": [
-    "bin/server"
-  ]
+  }
 }
