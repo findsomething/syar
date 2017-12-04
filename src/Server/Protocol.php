@@ -58,22 +58,10 @@ class Protocol extends BaseProtocol
             $this->yar->setReturnValue($result);
             $res->header('Content-Type', 'application/octet-stream');
             $res->end($this->packer->pack($this->yar));
+        } catch (\Throwable $e) {
+            $this->handleRequestError($e, $res);
         } catch (\Exception $e) {
-            if ($e->getCode() != 1001) {
-                $this->logger->error('syar onRequest error', [
-                    'error' => $e->getMessage(),
-                    'code' => $e->getCode(),
-                    'parse' => $this->parse,
-                ]);
-            }
-            if (!empty($this->yar)) {
-                $res->header('Content-Type', 'application/octet-stream');
-                $this->yar->setError($e->getMessage());
-                $res->end($this->packer->pack($this->yar));
-            } else {
-                $res->status(500);
-                $res->end($e->getMessage());
-            }
+            $this->handleRequestError($e, $res);
         } finally {
             $this->afterRequest($req, $res);
         }
@@ -92,13 +80,10 @@ class Protocol extends BaseProtocol
                 $service = $this->kernel->service($yarSource['s']);
                 $callResult = call_user_func_array([$service, $yarSource['m']], $yarSource['p']);
                 $result = Format::server($callResult);
+            } catch (\Throwable $e) {
+                $result = $this->handleReceiveError($e);
             } catch (\Exception $e) {
-                $result = Format::serverException($e->getMessage(), $e->getCode());
-                $this->logger->error('syar onReceive error', [
-                    'error' => $e->getMessage(),
-                    'code' => $e->getCode(),
-                    'parse' => $this->receiveParse
-                ]);
+                $result = $this->handleReceiveError($e);
             }
         }
         $encode = $this->tcpPacker->encode($result);
@@ -173,7 +158,37 @@ class Protocol extends BaseProtocol
         return $traceHeader;
     }
 
-    private function parseReq(\swoole_http_request $req)
+    protected function handleRequestError($e, $res)
+    {
+        if ($e->getCode() != 1001) {
+            $this->logger->error('syar onRequest error', [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'parse' => $this->parse,
+            ]);
+        }
+        if (!empty($this->yar)) {
+            $res->header('Content-Type', 'application/octet-stream');
+            $this->yar->setError($e->getMessage());
+            $res->end($this->packer->pack($this->yar));
+        } else {
+            $res->status(500);
+            $res->end($e->getMessage());
+        }
+    }
+
+    protected function handleReceiveError($e)
+    {
+        $result = Format::serverException($e->getMessage(), $e->getCode());
+        $this->logger->error('syar onReceive error', [
+            'error' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'parse' => $this->receiveParse
+        ]);
+        return $result;
+    }
+
+    protected function parseReq(\swoole_http_request $req)
     {
         $this->yar = null;
         if ($req->server['request_method'] != 'POST') {
