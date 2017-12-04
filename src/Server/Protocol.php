@@ -59,9 +59,9 @@ class Protocol extends BaseProtocol
             $res->header('Content-Type', 'application/octet-stream');
             $res->end($this->packer->pack($this->yar));
         } catch (\Throwable $e) {
-            $this->handleRequestError($e, $res);
+            $this->handleRequestError($e, $res, $req);
         } catch (\Exception $e) {
-            $this->handleRequestError($e, $res);
+            $this->handleRequestError($e, $res, $req);
         } finally {
             $this->afterRequest($req, $res);
         }
@@ -158,7 +158,7 @@ class Protocol extends BaseProtocol
         return $traceHeader;
     }
 
-    protected function handleRequestError($e, $res)
+    protected function handleRequestError($e, $res, $req)
     {
         if ($e->getCode() != 1001) {
             $this->logger->error('syar onRequest error', [
